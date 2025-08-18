@@ -1,0 +1,306 @@
+<!-- Jai Shree Krishna -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quant-Vidya | Predictive Stock Market Analytics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scrollbar-hide {
+            scrollbar-width: none;
+        }
+
+        .heat {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            overflow: auto;
+        }
+
+        /* The Modal (background) */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Fixed position to stay on top */
+            z-index: 1;
+            /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            background-color: rgba(0, 0, 0, 0.6);
+            /* Dark background */
+            overflow: hidden;
+            /* Prevent scrolling */
+        }
+
+        /* Modal Content (The actual popup) */
+        .modal-content {
+            background-color: #fff;
+            margin: 1% auto;
+            /* Adjusted margin to allow more space */
+            padding: 20px;
+            width: 90%;
+            /* Increased width of the modal */
+            height: 90%;
+            /* Increased height of the modal */
+            max-width: 10000px;
+            /* Max width to prevent being too large */
+            max-height: 8000px;
+            /* Max height to keep it within the screen */
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            /* Hide any overflow content */
+        }
+
+        /* Close Button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+
+        /* Prevent iframe from scrolling */
+        iframe {
+            width: 100%;
+            height: 100%;
+            /* Set the iframe to fill the height of the modal */
+            border: none;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            border: none;
+            color: white;
+            background-color: #2563eb;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 50;
+        }
+
+        .popup input,
+        .popup button {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+        }
+
+        .close-btn {
+            background-color: red;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            /* Ensuring it's below the Insert Button */
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: -9px;
+            right: -9px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* Vertical layout for the buttons */
+        #buttonsContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+        }
+
+        /* Style for option list */
+        #optionsList {
+            list-style-type: none;
+            padding: 0;
+            margin: 10px 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        #optionsList li {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+
+        #optionsList li:hover {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        @keyframes pop-up {
+            0% {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .pop-up-btn {
+            animation: pop-up 1s ease-out forwards;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 text-gray-900">
+    <header class="bg-blue-600 text-white py-4 shadow-lg flex items-center justify-between px-6">
+        <a href="index.html">
+            <img src="logo/logo.png" alt="Quant-Vidya Logo" class="h-14">
+        </a>
+        <div class="flex items-center">
+            <div class="text-2xl font-extrabold bg-blue-600 text-white outline-none">
+                Relative Rotational Graph
+            </div>
+        </div>
+        <button onclick="generateCharts()"
+            class="bg-white text-blue-600 px-3 py-2 rounded-lg font-semibold shadow-md flex items-center hover:bg-gray-200">
+            ❓ Help
+        </button>
+    </header>
+
+    <a href="https://sankhya-six.vercel.app/">
+        <button class="pop-up-btn fixed bottom-8 right-8 bg-yellow-600 text-white py-2 px-4 rounded-lg shadow-lg">
+            Backtest with <b>Sankhya</b>
+        </button>
+    </a>
+
+    <div class="popup-overlay" id="popupOverlay"></div>
+
+    <!-- Different Stock Selection Popup -->
+    <div class="popup" id="popup" style="display: none">
+
+        <!-- Search Section -->
+        <div style="width: 95%">
+            <label for="searchInput">Search or Select an Instrument :</label>
+            <input type="text" class="border" id="searchInput" placeholder="Type to search...">
+        </div>
+
+        <!-- Options List -->
+        <ul id="optionsList">
+            <li data-option="Bank Nifty">Bank Nifty</li>
+            <li data-option="HDFCBANK">HDFCBANK</li>
+            <li data-option="ICICIBANK">ICICIBANK</li>
+            <li data-option="RELIANCE">RELIANCE</li>
+            <li data-option="TCS">TCS</li>
+            <li data-option="WIPRO">WIPRO</li>
+        </ul>
+
+        <!-- Insert Button -->
+        <button class="btn" id="insertBtn">Insert Instrument</button>
+
+        <!-- Close Button (Moved to the bottom) -->
+        <button class="close-btn" id="closePopup">Close</button>
+    </div>
+
+    <div class="flex h-[calc(100vh-100px)] p-4 space-x-4">
+        <div class="w-1/4 bg-white shadow-lg rounded-lg p-4 flex flex-col" style="align-items: center;">
+            <h2 class="text-xl font-bold mt-4">Relative Rotational Graph</h2>
+            <label for="stock" class="block text-gray-700">Select Base Stock:</label>
+            <select id="stock" class="w-full mt-2 p-2 border border-gray-300 rounded-lg">
+                <!-- Options for Stock (Nifty50 list) -->
+                <option value="Nifty">Nifty</option>
+                <option value="Bank Nifty">Bank Nifty</option>
+            </select>
+            <!-- Main Button -->
+            <button class="btn" id="mainBtn">Add Instrument</button>
+
+            <!-- Container for added buttons -->
+            <div id="buttonsContainer"></div>
+        </div>
+
+        <div class="w-3/4 bg-white shadow-lg rounded-lg p-4 overflow-hidden h-full">
+            <iframe id="contentFrame" src="/wip" class="w-full h-full border rounded-md"
+                style="display: block;"></iframe>
+            <div class="heat">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div id="tooltip"></div>
+
+    <footer class="bg-blue-600 text-white text-center py-4 mt-4">
+        <div class="container mx-auto">
+            <div class="mt-2">
+                <a href="contact.html" class="text-white hover:underline mx-2">Contact Us</a>
+                <a href="about.html" class="text-white hover:underline mx-2">About Us</a>
+                <a href="report.html" class="text-white hover:underline mx-2">Report a Problem</a>
+                <a href="privacy.html" class="text-white hover:underline mx-2">Privacy Policy</a>
+                <a href="terms.html" class="text-white hover:underline mx-2">Terms and Conditions</a>
+            </div>
+            <p class="mt-2">&copy; 2025 Quant-Vidya. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+
+    <script src="/scripts/rrg.js"></script>
+</body>
+
+</html>

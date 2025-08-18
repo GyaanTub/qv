@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quant-Vidya | Predictive Stock Market Analytics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-white text-gray-900">
+    <header class="bg-blue-600 text-white py-4 shadow-lg relative flex justify-center items-center">
+        <!-- Center: Logo and Title -->
+        <div class="flex items-center">
+            <img src="logo/logo.png" alt="Quant-Vidya Logo" class="h-12 mr-4">
+            <div class="text-2xl font-bold">Quant-Vidya</div>
+        </div>
+
+        <!-- Right: Help Button -->
+        <div class="absolute right-4">
+            <button id="authButton"
+                class="bg-white text-blue-600 px-3 py-2 rounded-lg font-semibold shadow-md flex items-center hover:bg-gray-200">
+                Log In
+            </button>
+        </div>
+    </header>
+
+    <section
+        class="relative bg-gradient-to-br from-blue-100 via-white to-blue-600 min-h-[80vh] flex items-center justify-center">
+        <div class="container mx-auto px-6 py-12 text-center">
+            <h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight">
+                📈 Your Trading Superpower Starts Here! 📈
+            </h1>
+            <p class="text-lg md:text-xl text-gray-700 mt-6">
+                <b>Big traders</b> have <i><b>high-tech tools…</b></i> now you do too!
+            </p>
+            <p class="text-lg md:text-xl text-gray-700 mt-4">
+                We’re on a mission to help everyday heroes <b>(like you!)</b> trade
+                <i> smarter, faster, and cooler</i> — with tools made just for you. 🧠⚡
+            </p>
+            <p class="text-3xl font-bold mt-8 text-blue-700">
+                Ready to level up your trading game? 🎮🚀
+            </p>
+            <div class="mt-10">
+                <a href="#advancetool"
+                    class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg transition-all duration-300">
+                    Get Started Now
+                </a>
+                <a href="#about"
+                    class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg transition-all duration-300">
+                    About Us
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="container mx-auto mt-8 space-y-6 text-center">
+        <!-- Advanced Tools Section -->
+        <div class="p-6 bg-white rounded-lg" id="advancetool">
+            <img src="logo/advanced_tools_logo.png" alt="Advanced Tools Logo" class="h-16 mx-auto mb-4">
+            <h2 class="text-2xl font-semibold mb-4">Advanced Tools</h2>
+            <div class="grid grid-cols-3 gap-4 mt-4">
+                <!--
+                <-- Hedge Manager ->
+                <a href="HM.html" class="p-4 bg-gray-100 rounded-lg transition-transform transform hover:scale-105">
+                    <img src="logo/hm.png" alt="Hedge Master" class="h-12 mx-auto mb-2">
+                    <h3 class="font-semibold">Hedge Master</h3>
+                    <p class="text-gray-600 mt-2">Designed to manage risk, enabling the hedging of one contract with another. Helps mitigate potential losses by strategically offsetting exposure to market fluctuations.</p>
+                </a>
+
+                <-- Intraday Correlation -->
+                <a href="/correlation" class="p-4 bg-gray-100 rounded-lg transition-transform transform hover:scale-105">
+                    <img src="logo/ic.png" alt="Correlation Graph" class="h-12 mx-auto mb-2">
+                    <h3 class="font-semibold">Correlation Graph</h3>
+                    <p class="text-gray-600 mt-2">Used to analyze the correlation between stocks within days, identifying lead-lag relationships or dependencies.</p>
+                </a>
+
+                <!-- Scatter Distribution -->
+                <a href="/scatter" class="p-4 bg-gray-100 rounded-lg transition-transform transform hover:scale-105">
+                    <img src="logo/sd.png" alt="Scatter Distribution" class="h-12 mx-auto mb-2">
+                    <h3 class="font-semibold">Scatter Distribution</h3>
+                    <p class="text-gray-600 mt-2">A tool designed to identify cyclical patterns and relationships between two stocks over the course of a year.</p>
+                </a>
+
+                <!-- Seasonality Curve -->
+                <a href="/seac"
+                    class="p-4 bg-gray-100 rounded-lg transition-transform transform hover:scale-105">
+                    <img src="logo/seac.png" alt="Seasonality Curve" class="h-12 mx-auto mb-2">
+                    <h3 class="font-semibold">Seasonality Curve</h3>
+                    <p class="text-gray-600 mt-2">A tool that illustrates the historical movement of stocks over the
+                        past 10-20 years, emphasizing seasonal trends and patterns.</p>
+                </a>
+
+                <!-- Monthly Volatility -->
+                <a href="/monthly"
+                    class="p-4 bg-gray-100 rounded-lg transition-transform transform hover:scale-105">
+                    <img src="logo/mv.png" alt="Monthly Volatility" class="h-12 mx-auto mb-2">
+                    <h3 class="font-semibold">Monthly Volatility</h3>
+                    <p class="text-gray-600 mt-2">A tool used to measure the price fluctuations of a stock or asset on a
+                        monthly basis, providing insights into its volatility trends over time.</p>
+                </a>
+
+                <!-- Monthly Percentage Change -->
+                <a href="/monthperchange"
+                    class="p-4 bg-gray-100 rounded-lg transition-transform transform hover:scale-105">
+                    <img src="logo/mpc.png" alt="Monthly Percentage Change" class="h-12 mx-auto mb-2">
+                    <h3 class="font-semibold">Monthly Percentage Change</h3>
+                    <p class="text-gray-600 mt-2"> A tool that calculates the percentage change in a stock or asset’s
+                        price over the course of a month, providing insights into its performance and fluctuations.</p>
+                </a>
+
+                <!-- Monthly Seasonality (12M)-->
+                <a href="/ms12"
+                    class="p-4 bg-gray-100 rounded-lg transition-transform transform hover:scale-105">
+                    <img src="logo/ms12.png" alt="Monthly Seasonality" class="h-12 mx-auto mb-2">
+                    <h3 class="font-semibold">Monthly Seasonality (12M)</h3>
+                    <p class="text-gray-600 mt-2">A tool that examines recurring trends and patterns in stock or asset
+                        price movements over a tweleve-month period, providing insights into seasonal behaviors on a
+                        monthly basis.</p>
+                </a>
+
+                <!-- Relative Rotation Graph (RRG)-->
+                <a href="/rrg"
+                    class="p-4 bg-gray-100 rounded-lg transition-transform transform hover:scale-105">
+                    <img src="logo/RRG.png" alt="Relative Rotation Graph" class="h-12 mx-auto mb-2">
+                    <h3 class="font-semibold">Relative Rotation Graph</h3>
+                    <p class="text-gray-600 mt-2">A tool visualizes the relative strength and momentum of multiple assets, helping traders identify outperforming and underperforming assets through dynamic quadrant analysis.</p>
+                </a>
+
+                <!-- Add more tools -->
+                <a href="/suggest"
+                    class="p-4 bg-gray-100 rounded-lg transition-transform transform hover:scale-105">
+                    <img src="logo/st.png" alt="Suggest Tool" class="h-12 mx-auto mb-2">
+                    <h3 class="font-semibold">Add More Tools</h3>
+                    <p class="text-gray-600 mt-2">Please let us know the tools you require for your analysis, and we
+                        will be happy to develop them to meet your specific needs.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="bg-white py-20 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+
+            <!-- About Us Card (2/3 width) -->
+            <div class="md:col-span-2 bg-gray-100 shadow-xl rounded-2xl p-10 md:p-12 text-center">
+                <h2 class="text-4xl font-extrabold text-gray-900 mb-6">👋 Hi there!</h2>
+                <p class="text-lg text-gray-700 mb-6">
+                    We’re two friends who built this little startup called
+                    <span class="font-semibold text-blue-600">QuantVidya</span> — kind of like a superhero sidekick for
+                    people who trade stocks! 🦸‍♂️📈
+                </p>
+                <p class="text-lg text-gray-700 mb-6">
+                    Big trading companies have fancy gadgets and secret maps to help them win. That’s not fair, right?
+                    So we’re making awesome tools to help regular people
+                    <b>(like you!)</b> trade <i>smarter, faster, and cooler</i> — just like the big guys. 🚀💡
+                </p>
+                <p class="text-lg text-gray-700">
+                    Trading is tricky, but with our help, it doesn’t have to be.
+                    <span class="font-semibold text-blue-700">Let’s level up together!</span> 🎮✨
+                </p>
+            </div>
+
+            <!-- GIF Card (1/3 width) -->
+            <div
+                class="md:col-span-1 bg-gray-100 shadow-xl rounded-2xl overflow-hidden p-6 flex justify-center items-center h-full">
+                <img src="https://media.giphy.com/media/g1bQPcOQZ6cAoF1ihP/giphy.gif" alt="Trading animation"
+                    class="rounded-lg w-full h-auto object-cover max-h-96">
+            </div>
+
+        </div>
+    </section>
+
+    <section id="pricing" class="bg-white py-20 px-6 md:px-12">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-4">💰 One Time. Lifetime. Big Time! 🚀</h2>
+            <p class="text-lg text-gray-700 mb-10">
+                We’re giving retail traders pro-level tools — at a price that’s fair, simple, and forever.
+            </p>
+
+            <div class="bg-blue-50 border border-blue-200 shadow-xl rounded-2xl p-10 max-w-2xl mx-auto">
+                <h3 class="text-3xl font-bold text-blue-700 mb-2">🎉 Lifetime Access – ₹9,999/-</h3>
+                <p class="text-gray-600 mb-6">🗓️ One-Time Payment • 🧰 All Features • 🌟 No Monthly Fees</p>
+
+                <ul class="text-left text-gray-800 space-y-3 mb-8">
+                    <li>✅ Seasonality Stock Insights</li>
+                    <li>✅ Backtesting Engine</li>
+                    <li>✅ Built for Indian Markets</li>
+                    <li>✅ All Future Features Included</li>
+                    <li>✅ Priority Access + Lifetime Updates</li>
+                    <li>✅ Early Supporter Badge <span class="text-yellow-600">🦸‍♂️</span></li>
+                </ul>
+
+                <div class="text-red-600 font-semibold mb-6">
+                    ⚡ Limited Time Offer – Apply to Join ⏳
+                </div>
+
+                <!-- Call to Action -->
+                <a href="https://forms.gle/Z6QuLLvYhcyfSVfJ6"
+                    class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg px-6 py-3 rounded-lg shadow-lg transition-all duration-300">
+                    👉 Apply to Join as Early Supporter
+                </a>
+
+                <p class="text-sm text-gray-600 mt-6">
+                    🧠 We're onboarding carefully to get real feedback from real traders.<br>
+                    If selected, you’ll receive payment link + access instructions via email.
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    <footer class="bg-blue-600 text-white text-center py-4 mt-10">
+        <div class="container mx-auto">
+            <div class="mt-2">
+                <a href="contact.html" class="text-white hover:underline mx-2">Contact Us</a>
+                <a href="about.html" class="text-white hover:underline mx-2">About Us</a>
+                <a href="report.html" class="text-white hover:underline mx-2">Report a Problem</a>
+                <a href="privacy.html" class="text-white hover:underline mx-2">Privacy Policy</a>
+                <a href="terms.html" class="text-white hover:underline mx-2">Terms and Conditions</a>
+            </div>
+            <p class="mt-2">&copy; 2025 Quant-Vidya. All Rights Reserved.</p>
+        </div>
+    </footer>
+    <script src="/js/index.js"></script>
+</body>
+
+</html>

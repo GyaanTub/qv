@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quant-Vidya | Report a Problem</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      overflow-x: hidden;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .content {
+      z-index: 10;
+      position: relative;
+      animation: fadeIn 1s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .bounce-in {
+      animation: bounceIn 0.8s ease-out forwards;
+    }
+
+    @keyframes bounceIn {
+      0%   { transform: scale(0.9); opacity: 0; }
+      60%  { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen flex items-center justify-center py-20">
+
+  <!-- Bubble Canvas -->
+  <canvas id="bubbleCanvas"></canvas>
+
+  <!-- Suggest Tool Form -->
+  <div class="content w-full max-w-lg bg-white border-4 border-blue-500 rounded-xl shadow-xl p-6 sm:p-8 mx-4">
+    <a href="index.html">
+      <h1 class="text-3xl md:text-4xl font-bold text-blue-600 mb-6 text-center bounce-in">Quant-Vidya</h1>
+    </a>
+
+    <h2 class="text-2xl sm:text-3xl font-bold text-blue-600 text-center mb-4 bounce-in">Report a Problem</h2>
+    
+      <p class="text-center text-gray-600 mb-8 text-sm sm:text-base">Have any problems related to website/app? Let us know and we will solve it for you!</p>
+
+    <form class="space-y-4" method="POST" action="/report">
+      <div>
+        <label class="block font-semibold mb-1">Problem Statement</label>
+        <input type="text" class="w-full border rounded-md p-2 text-sm" name="problemName" placeholder="Enter your Problem Statement" />
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">What problem do you encounter?</label>
+        <textarea class="w-full border rounded-md p-2 text-sm" rows="3" name="problemDescription" placeholder="Brief description of your problem"></textarea>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Can you give more specific details of problem you have encounter?</label>
+        <textarea class="w-full border rounded-md p-2 text-sm" rows="3" name="problemdetail" placeholder="Describe any specific details of problem you have encounter"></textarea>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">Any special notes?</label>
+        <textarea class="w-full border rounded-md p-2 text-sm" rows="3" name="specialNotes" placeholder="Optional notes"></textarea>
+      </div>
+
+      <div class="text-center pt-2">
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2 rounded-full transition">
+          Submit
+        </button>
+      </div>
+    </form>
+
+    <p class="text-center text-xs text-gray-500 mt-8">&copy; 2025 Quant-Vidya. All rights reserved.</p>
+  </div>
+
+  <!-- Bubble Script -->
+  <script>
+    const canvas = document.getElementById('bubbleCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let bubbles = [];
+    let popSound;
+
+    class Bubble {
+      constructor() {
+        this.radius = Math.random() * 20 + 10;
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + this.radius;
+        this.speed = Math.random() * 1 + 0.5;
+        this.color = `rgba(59,130,246,${Math.random() * 0.3 + 0.2})`;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+      }
+
+      update() {
+        this.y -= this.speed;
+        if (this.y + this.radius < 0) {
+          this.reset();
+        }
+        this.draw();
+      }
+
+      isClicked(x, y) {
+        const dx = this.x - x;
+        const dy = this.y - y;
+        return Math.sqrt(dx * dx + dy * dy) < this.radius;
+      }
+
+      reset() {
+        this.radius = Math.random() * 20 + 10;
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + this.radius;
+        this.speed = Math.random() * 1 + 0.5;
+      }
+    }
+
+    function initBubbles() {
+      for (let i = 0; i < 100; i++) {
+        bubbles.push(new Bubble());
+      }
+    }
+
+    function animateBubbles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      bubbles.forEach(bubble => bubble.update());
+      requestAnimationFrame(animateBubbles);
+    }
+
+    canvas.addEventListener('click', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      for (let i = 0; i < bubbles.length; i++) {
+        if (bubbles[i].isClicked(x, y)) {
+          if (popSound) {
+            const clone = popSound.cloneNode();
+            clone.volume = 0.6;
+            clone.play().catch(() => {});
+          }
+          bubbles[i].reset();
+          break;
+        }
+      }
+    });
+
+    function enableSoundOnce() {
+      if (!popSound) {
+        popSound = new Audio("pop.mp3");
+        popSound.load();
+        console.log("Sound unlocked ✅");
+      }
+      document.removeEventListener('click', enableSoundOnce);
+    }
+
+    document.addEventListener('click', enableSoundOnce);
+
+    initBubbles();
+    animateBubbles();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      bubbles = [];
+      initBubbles();
+    });
+  </script>
+</body>
+</html>

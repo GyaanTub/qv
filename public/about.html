@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quant-Vidya | About Us</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      overflow-x: hidden;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .content {
+      z-index: 10;
+      position: relative;
+      animation: fadeIn 1s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .bounce-in {
+      animation: bounceIn 0.8s ease-out forwards;
+    }
+
+    @keyframes bounceIn {
+      0%   { transform: scale(0.9); opacity: 0; }
+      60%  { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen flex items-center justify-center py-20">
+
+  <!-- Bubble Canvas -->
+  <canvas id="bubbleCanvas"></canvas>
+
+  <!-- About Us Content -->
+  <div class="content w-full max-w-4xl bg-white border-4 border-blue-500 rounded-xl shadow-xl p-6 sm:p-8 mx-4">
+    
+    <a href="index.html">
+        <h1 class="text-3xl md:text-4xl font-bold text-blue-600 mb-6 text-center bounce-in">Quant-Vidya</h1>
+    </a>
+
+    <h2 class="text-2xl sm:text-3xl font-bold text-blue-600 text-center mb-6 bounce-in">About Us</h2>
+
+    <p class="text-center text-gray-600 mb-8 text-sm sm:text-base">Learn more about Quant-Vidya and our mission to empower knowledge seekers!</p>
+
+    <div class="space-y-6 text-sm sm:text-base text-gray-700">
+      <h2 class="font-semibold text-blue-600">Our Mission</h2>
+      <p>At Quant-Vidya, we are driven by a passion for knowledge and innovation. Our mission is to provide high-quality, accessible educational tools that help individuals grow their skills and achieve their goals. Whether you're a beginner or an expert, we strive to create resources that empower you in your journey.</p>
+
+      <h2 class="font-semibold text-blue-600">What We Do</h2>
+      <p>We specialize in building tailored tools that enhance the learning experience. Our platform offers interactive tools, courses, and resources across various domains, including quantitative research, data analysis, and more. We believe in making complex topics easier to understand through practical tools and engaging content.</p>
+
+      <h2 class="font-semibold text-blue-600">Our Values</h2>
+      <ul class="list-disc pl-5">
+        <li><strong>Innovation:</strong> We are always looking for new and better ways to deliver knowledge and improve our tools.</li>
+        <li><strong>Quality:</strong> We prioritize high standards and attention to detail in everything we do.</li>
+        <li><strong>Accessibility:</strong> We believe that everyone should have the opportunity to learn and grow, regardless of background or location.</li>
+        <li><strong>Community:</strong> We value the connections we build with our users, partners, and educators.</li>
+      </ul>
+
+      <h2 class="font-semibold text-blue-600">Our Team</h2>
+      <p>Our team consists of passionate individuals who are experts in their fields. We bring together knowledge from various domains, including education, technology, and design, to create impactful learning experiences. Together, we are dedicated to helping you succeed!</p>
+
+      <h2 class="font-semibold text-blue-600">Contact Us</h2>
+      <p>If you have any questions, suggestions, or just want to say hello, we would love to hear from you! Reach out to us via <a href="mailto:support@quantvidya.com" class="text-blue-600 hover:underline">support@quantvidya.com</a>.</p>
+      
+    </div>
+
+    <p class="text-center text-xs text-gray-500 mt-8">&copy; 2025 Quant-Vidya. All rights reserved.</p>
+  </div>
+
+  <!-- Bubble Script -->
+  <script>
+    const canvas = document.getElementById('bubbleCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let bubbles = [];
+    let popSound;
+
+    class Bubble {
+      constructor() {
+        this.radius = Math.random() * 20 + 10;
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + this.radius;
+        this.speed = Math.random() * 1 + 0.5;
+        this.color = `rgba(59,130,246,${Math.random() * 0.3 + 0.2})`;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+      }
+
+      update() {
+        this.y -= this.speed;
+        if (this.y + this.radius < 0) {
+          this.reset();
+        }
+        this.draw();
+      }
+
+      isClicked(x, y) {
+        const dx = this.x - x;
+        const dy = this.y - y;
+        return Math.sqrt(dx * dx + dy * dy) < this.radius;
+      }
+
+      reset() {
+        this.radius = Math.random() * 20 + 10;
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + this.radius;
+        this.speed = Math.random() * 1 + 0.5;
+      }
+    }
+
+    function initBubbles() {
+      for (let i = 0; i < 100; i++) {
+        bubbles.push(new Bubble());
+      }
+    }
+
+    function animateBubbles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      bubbles.forEach(bubble => bubble.update());
+      requestAnimationFrame(animateBubbles);
+    }
+
+    canvas.addEventListener('click', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      for (let i = 0; i < bubbles.length; i++) {
+        if (bubbles[i].isClicked(x, y)) {
+          if (popSound) {
+            const clone = popSound.cloneNode();
+            clone.volume = 0.6;
+            clone.play().catch(() => {});
+          }
+          bubbles[i].reset();
+          break;
+        }
+      }
+    });
+
+    function enableSoundOnce() {
+      if (!popSound) {
+        popSound = new Audio("pop.mp3");
+        popSound.load();
+        console.log("Sound unlocked ✅");
+      }
+      document.removeEventListener('click', enableSoundOnce);
+    }
+
+    document.addEventListener('click', enableSoundOnce);
+
+    initBubbles();
+    animateBubbles();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      bubbles = [];
+      initBubbles();
+    });
+  </script>
+</body>
+</html>

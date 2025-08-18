@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quant-Vidya | Privacy Policy</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      overflow-x: hidden;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .content {
+      z-index: 10;
+      position: relative;
+      animation: fadeIn 1s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .bounce-in {
+      animation: bounceIn 0.8s ease-out forwards;
+    }
+
+    @keyframes bounceIn {
+      0%   { transform: scale(0.9); opacity: 0; }
+      60%  { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen flex items-center justify-center py-20">
+
+  <!-- Bubble Canvas -->
+  <canvas id="bubbleCanvas"></canvas>
+
+  <!-- Privacy Policy Content -->
+  <div class="content w-full max-w-4xl bg-white border-4 border-blue-500 rounded-xl shadow-xl p-6 sm:p-8 mx-4">
+    <a href="index.html">
+        <h1 class="text-3xl md:text-4xl font-bold text-blue-600 mb-6 text-center bounce-in">Quant-Vidya</h1>
+    </a>
+    
+    <h2 class="text-2xl sm:text-3xl font-bold text-blue-600 text-center mb-6 bounce-in">Privacy Policy</h2>
+
+    <p class="text-center text-gray-600 mb-8 text-sm sm:text-base">We value your privacy and are committed to protecting your personal information.</p>
+
+    <div class="space-y-6 text-sm sm:text-base text-gray-700">
+      <h2 class="font-semibold text-blue-600">1. Introduction</h2>
+      <p>Welcome to Quant-Vidya! This Privacy Policy explains how we collect, use, and protect your personal information when you use our website. By accessing and using our services, you agree to the terms of this policy.</p>
+
+      <h2 class="font-semibold text-blue-600">2. Information We Collect</h2>
+      <p>We collect the following types of information:</p>
+      <ul class="list-disc pl-5">
+        <li><strong>Personal Information:</strong> When you sign up or contact us, we may collect your name, email address, and any other information you provide.</li>
+        <li><strong>Usage Data:</strong> We automatically collect information on how you use our website, such as your IP address, browser type, and pages you visit.</li>
+        <li><strong>Cookies:</strong> We use cookies to enhance your experience. Cookies are small files stored on your device that help us remember your preferences.</li>
+      </ul>
+
+      <h2 class="font-semibold text-blue-600">3. How We Use Your Information</h2>
+      <p>Your information is used for the following purposes:</p>
+      <ul class="list-disc pl-5">
+        <li>To provide, operate, and improve our website and services.</li>
+        <li>To send you updates, newsletters, or promotional content (you can opt-out at any time).</li>
+        <li>To respond to your inquiries and provide customer support.</li>
+        <li>To comply with legal obligations and enforce our terms of service.</li>
+      </ul>
+
+      <h2 class="font-semibold text-blue-600">4. Data Security</h2>
+      <p>We take appropriate security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction. However, please note that no method of transmission over the internet is 100% secure.</p>
+
+      <h2 class="font-semibold text-blue-600">5. Sharing Your Information</h2>
+      <p>We do not sell or rent your personal information to third parties. However, we may share information with trusted third-party service providers for purposes such as hosting our website or analyzing data. These third parties are obligated to protect your information and only use it for the purposes we specify.</p>
+
+      <h2 class="font-semibold text-blue-600">6. Your Rights</h2>
+      <p>You have the right to:</p>
+      <ul class="list-disc pl-5">
+        <li>Access and update your personal information.</li>
+        <li>Request the deletion of your personal data, subject to certain legal exceptions.</li>
+        <li>Opt-out of receiving marketing communications from us.</li>
+      </ul>
+      <p>To exercise these rights, please contact us at <a href="mailto:support@quantvidya.com" class="text-blue-600 hover:underline">support@quantvidya.com</a>.</p>
+
+      <h2 class="font-semibold text-blue-600">7. Cookies and Tracking Technologies</h2>
+      <p>We use cookies and similar technologies to track activity on our website and improve user experience. You can control cookies through your browser settings, but disabling cookies may affect the functionality of our website.</p>
+
+      <h2 class="font-semibold text-blue-600">8. Changes to This Privacy Policy</h2>
+      <p>We may update this Privacy Policy from time to time. Any changes will be posted on this page, and we encourage you to review the policy periodically to stay informed about how we protect your information.</p>
+
+      <h2 class="font-semibold text-blue-600">9. Contact Us</h2>
+      <p>If you have any questions or concerns about this Privacy Policy, please contact us at <a href="mailto:support@quantvidya.com" class="text-blue-600 hover:underline">support@quantvidya.com</a>.</p>
+
+    </div>
+
+    <p class="text-center text-xs text-gray-500 mt-8">&copy; 2025 Quant-Vidya. All rights reserved.</p>
+  </div>
+
+  <!-- Bubble Script -->
+  <script>
+    const canvas = document.getElementById('bubbleCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let bubbles = [];
+    let popSound;
+
+    class Bubble {
+      constructor() {
+        this.radius = Math.random() * 20 + 10;
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + this.radius;
+        this.speed = Math.random() * 1 + 0.5;
+        this.color = `rgba(59,130,246,${Math.random() * 0.3 + 0.2})`;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+      }
+
+      update() {
+        this.y -= this.speed;
+        if (this.y + this.radius < 0) {
+          this.reset();
+        }
+        this.draw();
+      }
+
+      isClicked(x, y) {
+        const dx = this.x - x;
+        const dy = this.y - y;
+        return Math.sqrt(dx * dx + dy * dy) < this.radius;
+      }
+
+      reset() {
+        this.radius = Math.random() * 20 + 10;
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + this.radius;
+        this.speed = Math.random() * 1 + 0.5;
+      }
+    }
+
+    function initBubbles() {
+      for (let i = 0; i < 100; i++) {
+        bubbles.push(new Bubble());
+      }
+    }
+
+    function animateBubbles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      bubbles.forEach(bubble => bubble.update());
+      requestAnimationFrame(animateBubbles);
+    }
+
+    canvas.addEventListener('click', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      for (let i = 0; i < bubbles.length; i++) {
+        if (bubbles[i].isClicked(x, y)) {
+          if (popSound) {
+            const clone = popSound.cloneNode();
+            clone.volume = 0.6;
+            clone.play().catch(() => {});
+          }
+          bubbles[i].reset();
+          break;
+        }
+      }
+    });
+
+    function enableSoundOnce() {
+      if (!popSound) {
+        popSound = new Audio("pop.mp3");
+        popSound.load();
+        console.log("Sound unlocked ✅");
+      }
+      document.removeEventListener('click', enableSoundOnce);
+    }
+
+    document.addEventListener('click', enableSoundOnce);
+
+    initBubbles();
+    animateBubbles();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      bubbles = [];
+      initBubbles();
+    });
+  </script>
+</body>
+</html>

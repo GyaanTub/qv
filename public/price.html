@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quant-Vidya | Pricing</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      overflow: hidden;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .content {
+      z-index: 10;
+      position: relative;
+      animation: fadeIn 1s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bounceIn {
+      0%   { transform: scale(0.9); opacity: 0; }
+      60%  { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+
+    .bounce-in {
+      animation: bounceIn 0.8s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900 flex items-center justify-center min-h-screen">
+
+  <!-- Bubble Canvas -->
+  <canvas id="bubbleCanvas"></canvas>
+
+  <!-- Pricing Content -->
+  <div class="content max-w-6xl mx-auto p-8">
+    <div class="text-center mb-10">
+      <a href="index.html">
+        <h1 class="text-3xl md:text-4xl font-bold text-blue-600 mb-6 bounce-in">Quant-Vidya</h1>
+      </a>
+      <h2 class="text-2xl font-semibold text-gray-800 mb-2">Choose Your Plan</h2>
+      <p class="text-gray-700 text-lg">Unlock all features with Monthly, Yearly or Lifetime access.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+      <!-- Monthly Plan -->
+      <div class="bg-white rounded-xl shadow-xl p-8 text-center border-4 border-blue-500 flex flex-col h-full">
+        <div class="flex-grow">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Monthly Plan</h2>
+          <p class="text-4xl font-bold text-blue-600 mb-4">₹199<span class="text-base text-gray-500">/month</span></p>
+          <ul class="text-gray-700 mb-6 space-y-2">
+            <li>✔️ Access to Indices & Index Stocks</li>
+            <li>✔️ Access to 2000+ Equity Stocks</li>
+            <li>✔️ Access to All Future Updates</li>
+          </ul>
+        </div>
+        <a href="/signup?plan=monthly" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full transition mt-4">Upgrade Now</a>
+      </div>
+
+      <!-- Yearly Plan -->
+      <div class="bg-white rounded-xl shadow-xl p-8 text-center border-4 border-blue-500 flex flex-col h-full">
+        <div class="flex-grow">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Yearly Plan</h2>
+          <p class="text-4xl font-bold text-blue-600 mb-4">₹1999<span class="text-base text-gray-500">/year</span></p>
+          <ul class="text-gray-700 mb-6 space-y-2">
+            <li>✔️ Access to Indices & Index Stocks</li>
+            <li>✔️ Access to 2000+ Equity Stocks</li>
+            <li>✔️ Access to All Future Updates</li>
+          </ul>
+        </div>
+        <a href="/signup?plan=yearly" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full transition mt-4">Go Yearly</a>
+      </div>
+
+      <!-- Lifetime Plan -->
+      <div class="bg-white rounded-xl shadow-xl p-8 text-center border-4 border-blue-500 flex flex-col h-full">
+        <div class="flex-grow">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Lifetime Plan</h2>
+          <p class="text-4xl font-bold text-blue-600 mb-4">₹9999<span class="text-base text-gray-500"> one-time</span></p>
+          <ul class="text-gray-700 mb-6 space-y-2">
+            <li>✔️ Access to Indices & Index Stocks</li>
+            <li>✔️ Access to 2000+ Equity Stocks</li>
+            <li>✔️ Access to All Future Updates</li>
+            <li>✔️ Lifetime Access</li>
+          </ul>
+        </div>
+        <a href="/signup?plan=lifetime" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full transition mt-4">Get Lifetime</a>
+      </div>
+    </div>
+
+    <p class="text-center text-xs text-gray-500 mt-10">&copy; 2025 Quant-Vidya. All rights reserved.</p>
+  </div>
+
+  <!-- Bubble Script -->
+  <script>
+    const canvas = document.getElementById('bubbleCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let bubbles = [];
+    let popSound;
+
+    class Bubble {
+      constructor() {
+        this.radius = Math.random() * 20 + 10;
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + this.radius;
+        this.speed = Math.random() * 1 + 0.5;
+        this.color = `rgba(59,130,246,${Math.random() * 0.3 + 0.2})`;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+      }
+
+      update() {
+        this.y -= this.speed;
+        if (this.y + this.radius < 0) {
+          this.reset();
+        }
+        this.draw();
+      }
+
+      isClicked(x, y) {
+        const dx = this.x - x;
+        const dy = this.y - y;
+        return Math.sqrt(dx * dx + dy * dy) < this.radius;
+      }
+
+      reset() {
+        this.radius = Math.random() * 20 + 10;
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + this.radius;
+        this.speed = Math.random() * 1 + 0.5;
+      }
+    }
+
+    function initBubbles() {
+      for (let i = 0; i < 100; i++) {
+        bubbles.push(new Bubble());
+      }
+    }
+
+    function animateBubbles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      bubbles.forEach(bubble => bubble.update());
+      requestAnimationFrame(animateBubbles);
+    }
+
+    canvas.addEventListener('click', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      for (let i = 0; i < bubbles.length; i++) {
+        if (bubbles[i].isClicked(x, y)) {
+          if (popSound) {
+            const clone = popSound.cloneNode();
+            clone.volume = 0.6;
+            clone.play().catch(() => {});
+          }
+          bubbles[i].reset();
+          break;
+        }
+      }
+    });
+
+    function enableSoundOnce() {
+      if (!popSound) {
+        popSound = new Audio("pop.mp3");
+        popSound.load();
+        console.log("Sound unlocked ✅");
+      }
+      document.removeEventListener('click', enableSoundOnce);
+    }
+
+    document.addEventListener('click', enableSoundOnce);
+
+    initBubbles();
+    animateBubbles();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      bubbles = [];
+      initBubbles();
+    });
+  </script>
+</body>
+</html>

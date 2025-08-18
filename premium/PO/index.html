@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rebalanced Portfolio with Volatility</title>
+</head>
+<body>
+    <h1>Rebalanced Portfolio with Volatility</h1>
+    <p id="result"></p>
+
+    <script>
+        // Define tickers (including '63 moons technologies limited' and '20 Microns Limited')
+        const tickers = [
+            '63 moons technologies limited', 
+            '20 Microns Limited'
+        ];
+
+        // Function to fetch data for each ticker from your API
+        async function fetchData(tickers) {
+            let data = {};
+
+            for (let ticker of tickers) {
+                // Fetch stock data from your API
+                const response = await fetch(`http://narad-iota.vercel.app/api/1d?stock=${ticker}`);
+                const stockData = await response.json();
+
+                // Store the adjusted close prices for each ticker
+                data[ticker] = stockData.map(d => ({
+                    date: d.Date,      // Use "Date" from your API
+                    close: parseFloat(d.Close)  // Convert "Close" to number for calculation
+                }));
+            }
+
+            return data;
+        }
+
+        // Function to find the smallest dataset based on the number of entries
+        function getSmallestDataset(data) {
+            let smallestTicker = null;
+            let smallestLength = Infinity;
+
+            for (let ticker in data) {
+                if (data[ticker].length < smallestLength) {
+                    smallestLength = data[ticker].length;
+                    smallestTicker = ticker;
+                }
+            }
+
+            // Return the smallest dataset
+            return data[smallestTicker];
+        }
+
+        // Function to calculate daily returns for each stock
+        function calculateDailyReturns(prices) {
+            return prices.slice(1).map((d, i) => {
+                return (d.close / prices[i].close) - 1;
+            }).filter(r => !isNaN(r)); // Filter out NaNs from daily returns
+        }
+
+        // Function to calculate volatility for each year
+        function calculateYearlyVolatility(prices) {
+            let volatility = {};
+            let yearsData = {};
+
+            // Group the daily returns by year
+            prices.forEach((d, i) => {
+                let date = new Date(d.date);
+                let year = date.getFullYear();
+                if (!yearsData[year]) {
+                    yearsData[year] = [];
+                }
+                yearsData[year].push((prices[i + 1].close / d.close) - 1);  // Daily return
+            });
+
+            // Calculate volatility (standard deviation) for each year
+            for (let year in yearsData) {
+                let dailyReturnsForYear = yearsData[year];
+                let meanReturn = dailyReturnsForYear.reduce((a, b) => a + b) / dailyReturnsForYear.length;
+                let variance = dailyReturnsForYear.reduce((a, b) => a + Math.pow(b - meanReturn, 2), 0) / dailyReturnsForYear.length;
+                let stdev = Math.sqrt(variance);
+
+                // Annualize volatility (assuming 252 trading days in a year)
+                volatility[year] = stdev * Math.sqrt(252);
+            }
+
+            return volatility;
+        }
+
+        // Function to calculate portfolio weights based on volatility for each year
+        function calculateWeightsForYear(volatility, year) {
+            let totalVolatility = 0;
+            let weights = {};
+
+            // Calculate total volatility for the portfolio in the given year, ignoring NaN values
+            for (let ticker in volatility) {
+                if (!isNaN(volatility[ticker][year]) && volatility[ticker][year] !== 0) {
+                    totalVolatility += volatility[ticker][year];
+                }
+            }
+
+            // Calculate inverse volatility weights for each ticker based on volatility for the given year
+            for (let ticker in volatility) {
+                let volatilityForYear = volatility[ticker][year];
+
+                if (!isNaN(volatilityForYear) && volatilityForYear !== 0 && totalVolatility !== 0) {
+                    weights[ticker] = 1 / volatilityForYear;  // Inverse volatility weight
+                } else {
+                    weights[ticker] = 0;  // If volatility is NaN or zero, set the weight to zero
+                }
+            }
+
+            // Normalize weights so they sum up to 1
+            let totalWeight = Object.values(weights).reduce((sum, weight) => sum + weight, 0);
+            for (let ticker in weights) {
+                weights[ticker] /= totalWeight;  // Normalize weights
+            }
+
+            return weights;
+        }
+
+        // Function to rebalance portfolio annually
+        async function rebalancePortfolio() {
+            let data = await fetchData(tickers);
+            
+            // Calculate volatility for each year
+            let volatility = {};
+            for (let ticker in data) {
+                volatility[ticker] = calculateYearlyVolatility(data[ticker]);
+            }
+
+            let rebalancePortfolioReturns = [];
+            let cumulativeRebalanced = 1;
+
+            // Get the years in the data
+            let years = Object.keys(volatility[tickers[0]]);
+
+            // Loop over the years to calculate returns for the rebalanced portfolio
+            for (let year of years) {
+                // Skip years with NaN values or no data
+                if (isNaN(volatility[tickers[0]][year])) {
+                    continue;
+                }
+
+                // Calculate portfolio weights for the year based on volatility for that year
+                let weights = calculateWeightsForYear(volatility, year);
+
+                let portfolioReturn = 0;
+
+                // Sum the returns for each stock weighted by their volatility-based weights
+                for (let ticker of tickers) {
+                    if (volatility[ticker] && volatility[ticker][year] !== undefined) {
+                        portfolioReturn += volatility[ticker][year] * weights[ticker];
+                    }
+                }
+
+                // Apply the annual return to the portfolio
+                cumulativeRebalanced *= (1 + portfolioReturn);
+                rebalancePortfolioReturns.push({ year, cumulativeRebalanced });
+            }
+
+            // Display the result
+            displayResults(rebalancePortfolioReturns);
+        }
+
+        // Function to display results on the webpage
+        function displayResults(rebalancePortfolioReturns) {
+            let resultDiv = document.getElementById("result");
+            let resultText = "Rebalanced Portfolio Cumulative Returns:<br>";
+
+            rebalancePortfolioReturns.forEach(entry => {
+                resultText += `Year: ${entry.year}, Cumulative Return: ${entry.cumulativeRebalanced.toFixed(2)}<br>`;
+            });
+
+            resultDiv.innerHTML = resultText;
+        }
+
+        // Run the function when the page loads
+        rebalancePortfolio();
+    </script>
+</body>
+</html>

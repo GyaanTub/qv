@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | Quant-Vidya</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      overflow: hidden;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .content {
+      z-index: 10;
+      position: relative;
+      animation: fadeIn 1s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0.9); opacity: 0; }
+      60% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+
+    .bounce-in {
+      animation: bounceIn 0.8s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900 flex items-center justify-center min-h-screen">
+
+  <!-- Bubble Canvas -->
+  <canvas id="bubbleCanvas"></canvas>
+
+  <!-- Login Form -->
+  <div class="content bg-white p-8 rounded-lg shadow-2xl text-center max-w-sm w-full">
+    <img src="main.png" alt="Quant-Vidya Logo" class="h-16 mx-auto mb-6 bounce-in">
+    <h2 class="text-2xl font-bold text-blue-600 mb-4">Welcome Back</h2>
+    <form action="/login" method="POST" class="text-left space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Username or Email</label>
+        <input type="text" name="identifier" required class="w-full mt-1 p-2 border rounded-lg" placeholder="Enter your username or email">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Password</label>
+        <input type="password" name="password" required class="w-full mt-1 p-2 border rounded-lg" placeholder="Enter your password">
+        <div class="text-right mt-1">
+          <a href="/forgot-password.html" class="text-sm text-blue-500 hover:underline">Forgot Password?</a>
+        </div>
+      </div>
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">Login</button>
+    </form>    
+    <p class="text-sm text-gray-600 mt-4">Don't have an account? <a href="/signup.html" class="text-blue-500 underline">Sign Up</a></p>
+  </div>
+
+  <!-- Bubble Script -->
+  <script>
+    const canvas = document.getElementById('bubbleCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let bubbles = [];
+    let popSound;
+
+    class Bubble {
+      constructor() {
+        this.radius = Math.random() * 20 + 10;
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + this.radius;
+        this.speed = Math.random() * 1 + 0.5;
+        this.color = `rgba(59,130,246,${Math.random() * 0.3 + 0.2})`;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+      }
+
+      update() {
+        this.y -= this.speed;
+        if (this.y + this.radius < 0) this.reset();
+        this.draw();
+      }
+
+      isClicked(x, y) {
+        const dx = this.x - x;
+        const dy = this.y - y;
+        return Math.sqrt(dx * dx + dy * dy) < this.radius;
+      }
+
+      reset() {
+        this.radius = Math.random() * 20 + 10;
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + this.radius;
+        this.speed = Math.random() * 1 + 0.5;
+      }
+    }
+
+    function initBubbles() {
+      for (let i = 0; i < 100; i++) {
+        bubbles.push(new Bubble());
+      }
+    }
+
+    function animateBubbles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      bubbles.forEach(bubble => bubble.update());
+      requestAnimationFrame(animateBubbles);
+    }
+
+    canvas.addEventListener('click', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      for (let i = 0; i < bubbles.length; i++) {
+        if (bubbles[i].isClicked(x, y)) {
+          if (popSound) {
+            const clone = popSound.cloneNode();
+            clone.volume = 0.6;
+            clone.play().catch(() => {});
+          }
+          bubbles[i].reset();
+          break;
+        }
+      }
+    });
+
+    // Unlock sound on first interaction
+    function enableSoundOnce() {
+      if (!popSound) {
+        popSound = new Audio("pop.mp3");
+        popSound.load();
+      }
+      document.removeEventListener('click', enableSoundOnce);
+    }
+
+    document.addEventListener('click', enableSoundOnce);
+
+    initBubbles();
+    animateBubbles();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      bubbles = [];
+      initBubbles();
+    });
+  </script>
+</body>
+</html>
