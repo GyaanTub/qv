@@ -8,7 +8,7 @@ const app = express();
 const PORT = 3000;
 
 // Please ensure this is set correctly
-const ALLOWED_HOSTS = ['http://localhost:3000', 'https://quantvidya.vercel.app'];
+const ALLOWED_HOSTS = ['http://localhost:3000', 'https://quantvidya.vercel.app', 'https://qv-nu.vercel.app'];
 
 function blockDirectAccess(req, res, next) {
   const referer = req.get('Referer');
@@ -73,4 +73,5 @@ app.get('/', (req, res) => {
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
+
 });
